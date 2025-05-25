@@ -20,3 +20,4 @@ def stream_users():
     
     cursor.close()
     conn.close()
+    
