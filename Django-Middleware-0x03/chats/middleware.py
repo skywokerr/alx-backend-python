@@ -143,6 +143,7 @@ class OffensiveLanguageMiddleware(MiddlewareMixin):
         return ip
 
 
+
 class RolePermissionMiddleware(MiddlewareMixin):
     """
     Middleware to enforce chat user role permissions.
