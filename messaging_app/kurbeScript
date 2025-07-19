@@ -1,0 +1,54 @@
+#!/bin/bash
+# KurbeScript - Local Kubernetes Cluster Setup
+
+# Install Minikube if missing
+install_minikube() {
+    echo "Checking Minikube installation..."
+    if ! command -v minikube &> /dev/null; then
+        echo "Minikube not found. Installing..."
+        
+        # Install dependencies
+        sudo apt-get update -qq
+        sudo apt-get install -qq -y curl virtualbox virtualbox-ext-pack
+        
+        # Install Minikube
+        curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+        sudo install minikube-linux-amd64 /usr/local/bin/minikube
+        rm minikube-linux-amd64
+        
+        echo "✓ Minikube installed"
+    else
+        echo "✓ Minikube already installed"
+    fi
+}
+
+# Start Kubernetes cluster
+start_cluster() {
+    echo "Starting Kubernetes cluster..."
+    minikube config set memory 4096
+    minikube config set cpus 2
+    minikube config set disk-size 20g
+    minikube start --driver=docker
+    
+    echo "✓ Cluster running"
+}
+
+# Verify cluster status
+verify_cluster() {
+    echo -e "\nCluster Info:"
+    kubectl cluster-info
+    
+    echo -e "\nAvailable Pods:"
+    kubectl get pods -A
+}
+
+# Main execution
+main() {
+    install_minikube
+    start_cluster
+    verify_cluster
+    echo -e "\nAccess Dashboard:"
+    minikube dashboard --url
+}
+
+main
